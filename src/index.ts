@@ -1,26 +1,48 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Bind resources to your worker in `wrangler.jsonc`. After adding bindings, a type definition for the
- * `Env` object can be regenerated with `npm run cf-typegen`.
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
+import { Hono, Next } from 'hono'
+import { PrismaClient } from '@prisma/client/edge'
+import { withAccelerate } from '@prisma/extension-accelerate'
+import { env } from 'hono/adapter'
 
-export default {
-	async fetch(request, env, ctx): Promise<Response> {
-		const url = new URL(request.url);
-		switch (url.pathname) {
-			case '/message':
-				return new Response('Hello, World!');
-			case '/random':
-				return new Response(crypto.randomUUID());
-			default:
-				return new Response('Not Found', { status: 404 });
-		}
-	},
-} satisfies ExportedHandler<Env>;
+const app = new Hono()
+
+app.post('/', async (c) => {
+  // Todo add zod validation here
+  const body: {
+    name: string;
+    email: string;
+    password: string
+  } = await c.req.json()
+  const { DATABASE_URL } = env<{ DATABASE_URL: string }>(c)
+
+  const prisma = new PrismaClient({
+      datasourceUrl: DATABASE_URL,
+  }).$extends(withAccelerate())
+
+  console.log(body)
+  await prisma.user.create({
+    data: {
+      name: body.name,
+      email: body.email,
+      password: body.password
+    }
+  })
+  
+  return c.json({msg: "as"})
+})
+
+app.get('/users', async (c) => {
+  const { DATABASE_URL } = env<{ DATABASE_URL: string }>(c)
+  
+  const prisma = new PrismaClient({
+    datasourceUrl: DATABASE_URL,
+  }).$extends(withAccelerate())
+
+  const users = await prisma.user.findMany({
+    select: { id: true, name: true, email: true } // exclude password
+  })
+
+  return c.json({ users })
+})
+
+
+export default app
