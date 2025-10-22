@@ -14,7 +14,7 @@
 		"enabled": true
 	},
 	"vars":{
-		"DATABASE_URL":"prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RfaWQiOjEsInNlY3VyZV9rZXkiOiJza19FZi1OUlVMRFN4NkU2aEhNQ1VjRXIiLCJhcGlfa2V5IjoiMDFLODVSN0JGVlNaRVFZUjkyNFYyUVlXMUsiLCJ0ZW5hbnRfaWQiOiIxODJlMGRmN2U5YjNjY2Q3YmVhNTBiNTdkZTViZDE4NzgzMTIzNmE3ZTI2MmZlOWY0MDIwZDFkZWExNzY3MzIxIiwiaW50ZXJuYWxfc2VjcmV0IjoiZWVjYWI3ODMtZDAyZi00NGNlLWFkY2UtNWU0NzcyZTBiMWIyIn0.ejIHqpozGo8OPogivyGFzhkbSV98j2WCjYOqiBveY9w"	
+		"DATABASE_URL":"enter_your_url"	
 	}
 	
 	/**
